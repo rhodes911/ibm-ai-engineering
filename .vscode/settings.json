@@ -1,0 +1,7 @@
+{
+  "github.copilot.chat.instructions.file": ".github/copilot-instructions.md",
+  "github.copilot.chat.instructions.files": [
+    ".docs/notebooks.instructions.md",
+    ".docs/api.instructions.md"
+  ]
+}
