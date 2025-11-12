@@ -40,6 +40,7 @@ When user pastes a lesson transcript from the IBM AI Engineering course:
 - Name format: `##-lesson-topic-practice.ipynb` (e.g., `01-introduction-to-regression-practice.ipynb`)
 - Include the following cells:
   - **Title & Overview**: Markdown cell with lesson objectives and what will be practiced
+  - **Glossary References**: Markdown cell with links to key terms in the module glossary
   - **Setup Cell**: "Run Me First" with imports, random seeds, matplotlib settings
   - **Real-World Dataset Generation**: Create synthetic but realistic dataset (50-200 rows)
   - **Exploratory Data Analysis**: Visualizations (scatter plots, histograms, correlation matrices)
@@ -52,11 +53,34 @@ When user pastes a lesson transcript from the IBM AI Engineering course:
   - Add some noise/outliers for realism
   - Include data dictionary explaining each column
 - Code quality:
+  - **EVERY line of executable code must have an inline comment** explaining what it does
   - Use NumPy for synthetic data generation with seeds
   - Use Pandas for data manipulation
   - Use Matplotlib/Seaborn for visualizations
-  - Include comments explaining each major step
   - Show both "manual" calculations and scikit-learn implementations when applicable
+  - Add glossary term references in comments (e.g., `# Calculate MSE (see glossary: Mean Squared Error)`)
+
+## Quiz Response Protocol
+When user posts quiz questions they got wrong:
+
+1. **Create Study Guide** (`notes/module-X/##-quiz-concepts-study-guide.md`):
+   - Analyze each wrong answer with detailed explanation
+   - Include visual diagrams and comparison tables
+   - Provide decision trees/flowcharts for distinguishing concepts
+   - Create "Key Takeaway" boxes for quick reference
+   - Add summary table of all quiz answers
+
+2. **Create Targeted Practice Lab** (`practice-labs/module-X/##-quiz-practice.ipynb`):
+   - Focus specifically on the concepts they missed
+   - Include hands-on exercises demonstrating the distinction
+   - Every code line must have comments
+   - Add glossary references throughout
+   - Include "Why This Matters" sections connecting to quiz questions
+
+3. **Glossary References**:
+   - Every notebook must include a "Key Concepts" section at the top
+   - List relevant glossary terms with file paths: `See: notes/glossary-module-X.md - Term Name`
+   - Reference glossary in code comments where applicable
 
 ### Example Glossary Entry Format:
 ```markdown

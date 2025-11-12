@@ -55,11 +55,98 @@ Regression where the relationship between variables is curved rather than straig
 *Example: Website traffic growth follows exponential curve—first month 100 visitors, second 300, third 900, fourth 2,700 (×3 growth each month)—cannot be captured by straight line, requires exponential model like Traffic = 100 × 3^months.*
 
 **Polynomial Regression**
-A type of nonlinear regression that uses polynomial terms (squared, cubed, etc.) to model curved relationships between variables.
+A type of nonlinear regression that uses polynomial terms (squared, cubed, etc.) to model curved relationships between variables. It transforms features into higher-degree polynomials but remains linear in parameters, allowing use of ordinary least squares.
 *Example: Crop yield vs fertilizer follows polynomial: Yield = 50 + 30×Fertilizer - 2×(Fertilizer)²—initially each kg of fertilizer adds 30 bushels, but excessive fertilizer (above 7.5kg) actually reduces yield due to over-fertilization, creating a curved relationship.*
 
+**Degree of Polynomial**
+The highest power of the independent variable in a polynomial equation. Common degrees: 1 (linear), 2 (quadratic), 3 (cubic), 4 (quartic).
+*Example: A quadratic model Price = 50,000 + 150×Size - 0.01×Size² has degree 2, creating a parabolic curve that captures how very large houses (>5,000 sq ft) enter luxury market with different pricing dynamics than average homes.*
+
+**Polynomial Features**
+Transformed versions of original features created by raising them to powers (x, x², x³, etc.) to capture nonlinear relationships while using linear regression.
+*Example: Original feature x = [1, 2, 3] transforms to polynomial features: x₁=[1,2,3], x₂=[1,4,9], x₃=[1,8,27]—allowing model y = θ₀ + θ₁x₁ + θ₂x₂ + θ₃x₃ to fit curves using standard linear regression.*
+
+**Quadratic Regression**
+Polynomial regression of degree 2, modeling relationships as parabolas using equation y = θ₀ + θ₁x + θ₂x².
+*Example: Advertising ROI follows quadratic pattern—first $10k spend yields high returns (growth phase), but after $50k, market saturates and returns diminish (decay phase), creating U-shaped or inverted-U curve that linear models miss.*
+
+**Cubic Regression**
+Polynomial regression of degree 3, creating S-curves with one inflection point using equation y = θ₀ + θ₁x + θ₂x² + θ₃x³.
+*Example: Product adoption lifecycle—slow initial uptake (early adopters), rapid acceleration (mainstream), then saturation (late majority)—forms S-curve that cubic polynomial captures with equation Sales = 100 + 50×Month - 2×Month² + 0.05×Month³.*
+
+**Underfitting**
+When a model is too simple to capture the underlying pattern in data, resulting in high bias and poor performance on both training and test data.
+*Example: Using linear regression (straight line) on data that follows exponential growth—model predicts Revenue = 10k + 5k×Year but actual growth is 10k × 1.5^Year, systematically underestimating future revenue by increasingly large amounts as time passes.*
+
+**Overfitting**
+When a model is too complex and learns training data too well, including noise and random variations, resulting in excellent training performance but poor generalization to new data.
+*Example: Fitting degree-15 polynomial to 20 house prices—model passes through every single point perfectly (training R²=0.99) but predicts $-2M for new houses and $50M for others (test R²=0.30) because it memorized noise instead of learning true patterns.*
+
+**Feature Transformation**
+Converting original features into new representations (polynomial terms, logarithms, exponentials) to capture nonlinear relationships or meet model assumptions.
+*Example: Converting linear model Price = θ₀ + θ₁×Size into polynomial by creating Size²=x², Size³=x³ features, then fitting Price = θ₀ + θ₁×Size + θ₂×Size² + θ₃×Size³ to capture curved relationship using same linear regression algorithm.*
+
+**Exponential Growth**
+A pattern where quantity increases at a rate proportional to its current value, creating accelerating growth modeled as y = θ₀ × e^(θ₁x) or y = θ₀ + θ₁ × e^(θ₂x).
+*Example: Viral social media post grows: Day 1: 100 views, Day 2: 300, Day 3: 900, Day 4: 2,700 (×3 each day)—exponential model captures this with Views = 33.3 × 3^Day, unlike linear model that would wrongly predict constant growth.*
+
+**Logarithmic Growth (Diminishing Returns)**
+A pattern where growth rate decreases over time, with each additional input yielding less output, modeled as y = θ₀ + θ₁ × log(x).
+*Example: Worker productivity—first hour produces 10 units, second 10 more (total 20), but 7th hour adds only 5 units (total 65), 10th hour adds 2 (total 74)—logarithmic model captures fatigue: Productivity = 10 + 15×log(Hours).*
+
+**Sinusoidal Pattern (Periodic)**
+A cyclical pattern that repeats at regular intervals, modeled using sine/cosine functions as y = θ₀ + θ₁ × sin(θ₂x + θ₃).
+*Example: Ice cream sales show seasonality—Jan: $10k, Apr: $50k, Jul: $90k, Oct: $50k, Jan: $10k (repeats yearly)—sinusoidal model captures this: Sales = 50k + 40k×sin((2π/12)×Month - π/2).*
+
+**Compound Interest / Compound Growth**
+Growth pattern where increases are calculated on accumulated value rather than original value, characteristic of exponential models common in finance.
+*Example: $10,000 investment at 10% annual compound interest: Year 1: $11,000, Year 2: $12,100, Year 3: $13,310—each year's gain is larger than previous (not constant $1k), modeled as Value = 10,000 × 1.1^Year.*
+
+**Law of Diminishing Returns**
+Economic principle where incremental gains decrease as more resources are added, typically modeled with logarithmic functions.
+*Example: Restaurant adding chefs—1st chef serves 30 customers/hour, 2nd chef adds 25 more (total 55, not 60 due to shared equipment), 3rd adds 15 (total 70), 4th adds only 8 (total 78)—each additional chef contributes less due to kitchen congestion.*
+
+**Gradient Descent Optimization**
+Iterative algorithm that finds optimal model parameters by repeatedly taking steps in direction of steepest descent of cost function, used for true nonlinear regression.
+*Example: Fitting exponential model y = θ₀×e^(θ₁x)—start with random θ₀=1, θ₁=0.1, calculate error, compute gradient, update to θ₀=1.2, θ₁=0.15, repeat 1000 times until reaching optimal θ₀=5.3, θ₁=0.24 that minimizes MSE.*
+
+**Power Law**
+A functional relationship where one quantity varies as a power of another, expressed as y = θ₀ × x^θ₁, common in physics and network effects.
+*Example: Metcalfe's Law states network value grows with square of users—phone network with 100 users creates 10,000 connections (100²), but 1,000 users creates 1,000,000 connections (1000²), modeled as Value = k × Users².*
+
+**Logistic Curve (S-Curve)**
+A sigmoid-shaped curve showing initial exponential growth that transitions to saturation at a maximum carrying capacity, modeled as y = L/(1 + e^(-k(x-x₀))).
+*Example: Netflix subscribers—explosive early growth 2010-2015 (exponential phase), then slowing 2016-2020 (transition), now approaching saturation ~250M (plateau), following logistic curve as market reaches capacity limits.*
+
+**Residual Plot**
+A diagnostic plot showing residuals (errors) vs predicted values or independent variables, used to detect patterns indicating model inadequacy.
+*Example: After fitting linear model, residual plot shows curved pattern (residuals positive at low/high x, negative at medium x)—indicates relationship is actually quadratic, not linear; random scatter pattern would indicate good fit.*
+
+**Model Complexity**
+The flexibility or capacity of a model to fit various patterns, typically increasing with number of parameters. Must be balanced with data size to avoid overfitting.
+*Example: Linear model (2 parameters: θ₀, θ₁) has low complexity; quadratic (3 parameters) has medium; degree-10 polynomial (11 parameters) has high complexity—for 50 data points, quadratic is appropriate but degree-10 likely overfits.*
+
+**Bias-Variance Tradeoff**
+The balance between underfitting (high bias from too-simple model) and overfitting (high variance from too-complex model). Optimal model minimizes total error.
+*Example: Linear model on curved data has high bias (underfits, systematic errors) but low variance (stable predictions); degree-15 polynomial has low bias but high variance (changes drastically with small data changes)—quadratic balances both for optimal performance.*
+
+**Cross-Validation**
+A technique for assessing model generalization by training on multiple different subsets of data and averaging performance, used to detect overfitting.
+*Example: 5-fold CV divides 1,000 records into 5 groups of 200—train on groups 1-4 test on 5, train on 1-3&5 test on 4, etc., getting 5 error scores to average—degree-3 polynomial averages MSE=150 while degree-10 averages MSE=380, revealing overfitting.*
+
+**K-Fold Cross-Validation**
+Specific cross-validation method that splits data into k equal parts, training k times with different fold held out for testing each time.
+*Example: 10-fold CV on 1,000 samples creates 10 groups of 100—iteration 1: train on 900 test on 100, iteration 2: different 900/100 split, etc.—final score is average of 10 test errors, giving robust estimate of true performance.*
+
+**Regularization**
+Technique that penalizes model complexity by adding a cost for large coefficients, preventing overfitting in polynomial regression (Ridge, Lasso, Elastic Net).
+*Example: Degree-10 polynomial without regularization fits training perfectly but fails on test data; Ridge regularization penalizes large coefficients, forcing most θ values near zero, effectively reducing to degree-3 model that generalizes better.*
+
+**Model Selection**
+The process of choosing among candidate models (different degrees, algorithms) based on performance metrics, cross-validation, and domain knowledge.
+*Example: Testing linear (R²=0.65), quadratic (R²=0.89), cubic (R²=0.91), degree-10 (R²=0.99 train, R²=0.45 test)—select quadratic or cubic because they balance fit quality with generalization, avoiding both underfitting (linear) and overfitting (degree-10).*
+
 **Best-Fit Line**
-The single straight line that passes closest to all data points in a scatter plot, minimizing the total distance (sum of squared residuals) to all points.
 *Example: Plotting 100 houses' size vs price shows scattered points; the best-fit line might be Price = 50,000 + 150×SqFt, positioned so the total squared distance from all 100 points to this line is smaller than any other possible line.*
 
 **Predicted Value (ŷ)**
@@ -380,6 +467,40 @@ The scikit-learn class implementing ordinary least squares linear regression.
 The scikit-learn class implementing logistic regression for classification.
 *Example: `from sklearn.linear_model import LogisticRegression; model = LogisticRegression(); model.fit(X, y)` trains a classifier for binary outcomes like spam/not spam or fraud/legitimate, outputting probabilities and class predictions.*
 
+**PolynomialFeatures class**
+A scikit-learn preprocessing transformer that generates polynomial and interaction features from input features.
+*Example: `from sklearn.preprocessing import PolynomialFeatures; poly = PolynomialFeatures(degree=2); X_poly = poly.fit_transform(X)` converts [x₁, x₂] into [1, x₁, x₂, x₁², x₁x₂, x₂²]—automatically creating squared terms and interactions for polynomial regression.*
+
+**Pipeline class**
+A scikit-learn utility that chains multiple processing steps (transformers and estimator) into a single object, ensuring consistent application of transformations.
+*Example: `Pipeline([('poly', PolynomialFeatures(degree=3)), ('linear', LinearRegression())])` automatically applies polynomial transformation then regression in sequence, preventing data leakage by ensuring test data uses same transformations as training.*
+
+## Machine Learning Algorithms
+
+**Decision Tree / Regression Tree**
+A non-parametric model that splits feature space into regions and predicts average value in each region, creating a tree of if-then rules.
+*Example: Predicting house prices—tree splits: "IF size>2000 THEN IF bedrooms>3 THEN $450k ELSE $380k ELSE IF age<10 THEN $320k ELSE $280k"—automatically discovering rules without specifying functional form.*
+
+**Random Forest**
+An ensemble method that trains multiple decision trees on random subsets of data and features, then averages their predictions for robust, low-variance results.
+*Example: Airbnb pricing trains 500 trees—each sees random 80% of listings and random 60% of features (location, amenities, reviews)—final price is average of all 500 predictions, reducing overfitting that single tree would have.*
+
+**Neural Network**
+A machine learning model composed of layers of interconnected nodes (neurons) with nonlinear activation functions, capable of learning complex nonlinear patterns.
+*Example: Google's AlphaFold predicts protein folding using deep neural network with millions of parameters and dozens of layers—each layer learns progressively abstract patterns from amino acid sequences to 3D structure, impossible for traditional regression.*
+
+**Support Vector Machine (SVM)**
+An algorithm that maps data to higher dimensions and finds optimal separating hyperplane, effective for nonlinear regression when using kernel tricks.
+*Example: Credit card fraud detection uses SVM with RBF kernel to transform spending patterns into higher-dimensional space where fraudulent transactions separate cleanly from legitimate ones—capturing complex nonlinear boundaries that linear models miss.*
+
+**Gradient Boosting Machine (GBM)**
+An ensemble method that sequentially builds decision trees, each correcting errors of previous trees, often achieving state-of-the-art performance.
+*Example: Kaggle competition for retail sales forecasting—XGBoost (GBM variant) trains 1000 shallow trees sequentially: tree 1 predicts baseline, tree 2 corrects tree 1's errors, tree 3 corrects remaining errors, achieving 15% better accuracy than random forest.*
+
+**k-Nearest Neighbors (KNN)**
+A non-parametric method that predicts based on the average of k closest training examples in feature space, naturally handling nonlinear relationships.
+*Example: Spotify recommending songs—for new user who likes Pop and Rock, KNN finds 10 most similar users (by listening history cosine similarity), then predicts new user will rate songs highly that those 10 neighbors rated highly—no formula, just similarity.*
+
 ---
 
-*Last updated: November 11, 2025*
+*Last updated: November 12, 2025*
