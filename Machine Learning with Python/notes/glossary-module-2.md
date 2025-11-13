@@ -249,6 +249,10 @@ The ratio of the probability of an event occurring to the probability of it not 
 The natural logarithm of the odds, which forms the linear component in logistic regression. $\text{logit}(p) = \ln\left(\frac{p}{1-p}\right)$
 *Example: If probability of disease is 0.9, odds = 0.9/0.1 = 9, and log odds = ln(9) = 2.197—logistic regression models this log odds as a linear equation like 2.197 = -5 + 0.3×Age + 2×Smoker.*
 
+**Odds Ratio**
+The multiplicative change in odds associated with a one-unit increase in a predictor variable, calculated as e^{coefficient} in logistic regression.
+*Example: If logistic regression coefficient for "Annual Contract" is 0.9, then odds ratio = e^{0.9} ≈ 2.46, meaning customers with annual contracts are 2.46 times more likely to stay (not churn) compared to monthly customers—a powerful indicator for retention strategies.*
+
 **Probability**
 A numerical value between 0 and 1 representing the likelihood of an event occurring.
 *Example: Weather forecast showing 70% (0.70) chance of rain means if conditions are repeated 100 times, it would rain about 70 times—or a model predicting 0.15 probability a customer churns (15% chance of leaving).*
@@ -260,6 +264,22 @@ The threshold (typically 0.5 for binary classification) that separates one class
 **Threshold**
 The probability cutoff used to convert continuous probability predictions into discrete class labels.
 *Example: In cancer screening, setting threshold at 0.3 (30%) means flag any case with ≥30% probability as "needs further testing" to catch more cases (high recall), while 0.8 threshold means only flag very confident cases to reduce false alarms (high precision).*
+
+**Churn**
+The loss of customers or subscribers over a given period, commonly expressed as a percentage; a key metric in subscription businesses and telecommunications.
+*Example: Netflix tracking monthly churn rate of 2.5% means 25,000 of 1 million subscribers cancel each month—logistic regression models help identify high-risk subscribers (probability > 0.6) for targeted retention campaigns offering personalized content recommendations or discounts.*
+
+**Linearly Separable**
+A property of data where classes can be perfectly separated by a linear decision boundary (line, plane, or hyperplane).
+*Example: Dataset of student exam pass/fail where all students who studied >6 hours passed and all who studied <6 hours failed—perfectly linearly separable by vertical line at 6 hours. Real-world data is rarely perfectly separable, but logistic regression finds best linear boundary even with overlap.*
+
+**Probability Calibration**
+The process of adjusting model output probabilities to match true observed frequencies, ensuring predicted probabilities reflect actual likelihoods.
+*Example: Model predicts 100 transactions at 0.7 fraud probability, but only 50 are actually fraud—poorly calibrated. Calibration adjusts so "0.7 probability" predictions actually have 70% fraud rate, enabling businesses to trust probability-based decisions like "review all transactions >0.8 probability."*
+
+**Class Imbalance**
+A situation where one class significantly outnumbers another in the training data, potentially causing models to bias toward the majority class.
+*Example: Fraud detection dataset with 9,950 legitimate and 50 fraudulent transactions (99.5% vs 0.5%)—naive model predicting "always legitimate" achieves 99.5% accuracy but catches zero fraud. Solutions: SMOTE oversampling, class_weight='balanced', or focus on F1/ROC-AUC instead of accuracy.*
 
 ## Model Training and Optimization
 
@@ -283,9 +303,29 @@ A cost function used in logistic regression that measures the performance of a c
 An optimization algorithm used to minimize the cost function by iteratively adjusting model parameters in the direction of steepest descent.
 *Example: Imagine standing on a mountain (cost function) blindfolded—gradient descent takes steps downhill (opposite of gradient) repeatedly: step→measure slope→step downhill→repeat until reaching the valley bottom (minimum cost).*
 
+**Batch Gradient Descent**
+A variant of gradient descent that computes the gradient using the entire training dataset before each parameter update; stable but can be slow on large datasets.
+*Example: With 100,000 examples, each update processes all 100,000 to compute an exact gradient—requires more memory/time per step but produces smooth, reliable loss decrease useful for convex problems like logistic regression.*
+
+**Stochastic Gradient Descent (SGD)**
+An optimization method that updates parameters using one randomly selected example at a time; very fast per update but noisy, often requiring lower learning rates.
+*Example: For click-through prediction on streaming ad data, SGD updates after each impression (one row) enabling near-real-time learning, with loss wiggling but trending downward over many iterations.*
+
+**Mini-batch Gradient Descent**
+Compromise between batch and SGD that updates parameters using small batches (e.g., 32–512 samples), improving convergence stability and hardware efficiency.
+*Example: Training logistic regression with batch_size=64 uses vectorized operations for speed while preserving some noise benefits of SGD—commonly the best default for scalable training.*
+
+**Batch Size**
+The number of samples processed before updating model parameters in mini-batch methods.
+*Example: With 10,000 samples and batch_size=100, one epoch has 100 iterations—each computing gradients on 100 samples for one parameter update.*
+
 **Learning Rate**
 A hyperparameter that controls the size of steps taken during gradient descent. Too large can cause overshooting; too small can make training very slow.
 *Example: With learning rate 0.001, model takes tiny careful steps (10,000 iterations to converge), but with 0.1 takes big steps (100 iterations)—however, 1.0 might overshoot and bounce around the minimum forever without converging.*
+
+**Learning Rate Schedule**
+Strategy for changing the learning rate during training (e.g., step decay, time-based decay, cosine annealing) to improve convergence.
+*Example: Start at 0.1 then halve every 5 epochs (0.1→0.05→0.025) to explore quickly early on and fine-tune near the optimum later.*
 
 **Convergence**
 The point at which the training algorithm stops improving the model because it has found a minimum of the cost function.
@@ -298,6 +338,18 @@ One complete pass through the entire training dataset during the training proces
 **Iteration**
 A single update of the model parameters during training, typically processing one batch of data.
 *Example: With 10,000 examples and batch size 100, one epoch = 100 iterations (10,000/100)—each iteration processes 100 examples, calculates gradient, and updates weights once.*
+
+**Early Stopping**
+Regularization technique that halts training when validation performance stops improving to prevent overfitting.
+*Example: Monitor validation log loss each epoch and stop if it hasn’t improved for 5 epochs—training selects the best epoch instead of the final one, improving generalization.*
+
+**Max Iterations (max_iter)**
+Upper limit on the number of optimization iterations/epochs to run during training.
+*Example: Setting `max_iter=1000` in scikit-learn’s LogisticRegression allows the solver more steps to converge on difficult datasets without prematurely stopping.*
+
+**Tolerance (tol)**
+Threshold for minimal improvement required to continue optimization; when changes fall below this, training stops.
+*Example: With `tol=1e-4`, the solver stops if the change in loss between iterations is less than 0.0001—saving time once near the optimum.*
 
 **Mean Absolute Error (MAE)**
 The average of the absolute values of prediction errors, providing an easy-to-interpret metric in the same units as the target variable.
@@ -466,6 +518,26 @@ The scikit-learn class implementing ordinary least squares linear regression.
 **LogisticRegression class**
 The scikit-learn class implementing logistic regression for classification.
 *Example: `from sklearn.linear_model import LogisticRegression; model = LogisticRegression(); model.fit(X, y)` trains a classifier for binary outcomes like spam/not spam or fraud/legitimate, outputting probabilities and class predictions.*
+
+**`solver` parameter (LogisticRegression)**
+Specifies the optimization algorithm used to fit the model. Common options: `lbfgs` (default, robust, supports L2), `liblinear` (good for small datasets and L1), `saga` (supports L1/L2/elasticnet and large sparse data), `newton-cg` (L2, multi-class), `sag` (large datasets; requires feature scaling).
+*Example: For high-dimensional sparse text features, choose `solver='saga'` with `penalty='l1'` to perform feature selection via sparsity, whereas small dense tabular data often works best with `solver='lbfgs'`.*
+
+**`penalty` parameter (LogisticRegression)**
+Regularization type applied to coefficients. Options include `'l2'`, `'l1'`, and `'elasticnet'` (with `l1_ratio`).
+*Example: Using `penalty='l1'` encourages many coefficients to be exactly zero, simplifying the model and improving interpretability in domains like credit risk.*
+
+**`C` (Inverse Regularization Strength)**
+Controls regularization strength; smaller `C` implies stronger regularization (C = 1/λ).
+*Example: Setting `C=0.1` shrinks coefficients more aggressively to reduce overfitting, while `C=10` allows larger weights for potentially better fit but higher variance.*
+
+**`class_weight` parameter**
+Adjusts the penalty for misclassifying each class to handle imbalance; `'balanced'` uses inverse class frequency.
+*Example: In 1% fraud data, `class_weight='balanced'` makes the solver pay more attention to the minority class, improving recall without manual resampling.*
+
+**`max_iter` parameter**
+Maximum number of iterations for the solver to converge.
+*Example: Increase `max_iter` when you see a ConvergenceWarning with `lbfgs` to give the optimizer more steps to reach a solution.*
 
 **PolynomialFeatures class**
 A scikit-learn preprocessing transformer that generates polynomial and interaction features from input features.
